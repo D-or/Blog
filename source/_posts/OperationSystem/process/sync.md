@@ -163,7 +163,9 @@ Swait(S1, t1, d1, S2, t2, d2, ..., Sn, tn, dn)
 
 特殊情况：
 
-- Swait(S, d, d)。只有一个信号量 S
+- Swait(S, d, d)。只有一个信号量 S，允许申请 d 个资源，现有资源少于 d 时不予分配
+- Swait(S, 1, 1)。信号量集转变成一般的记录型信号量（S > 1）或互斥信号量（S = 1）
+- Swait(S, 1, 0)。当 S >= 1 时，允许多个进程进入特定区；当 S 变为 0后，将阻止任何任何进程进入特定区
 
 ---
 
@@ -171,7 +173,45 @@ Swait(S1, t1, d1, S2, t2, d2, ..., Sn, tn, dn)
 
 #### 进程互斥
 
+设置一互斥信号量，初始值为 1，在进程进入临界区之前对 mutex 进行 wait 操作，若该资源未被访问，则 wait 操作成功，此时如果有其他进程欲进入临界区，则对 mutex 的 wait 就会失败，阻塞进程，而当进程离开临界区后，对 mutex 进行 signal 操作
+
+```
+Var mutex: semaphore := 1;
+
+begin
+    parbegin
+        process 1: begin
+                       repeat
+                           wait(mutex);
+                           critical secion;
+                           signal(mutex);
+                           remainder section;
+                       until false;
+                   end
+        process 2: begin
+                       repeat
+                           wait(mutex);
+                           critical secion;
+                           signal(mutex);
+                           remainder section;
+                       until false;
+                   end
+    parend
+```
+
 #### 前趋关系
+
+假设进程 A、B 并发执行，A 中有语句 S1，B 中有语句 S2，若 S1 执行后才执行 S2，可设一个信号量 S，初值为 0，则
+
+```
+process A:
+    S1; signal(S);
+
+process B:
+    wait(S); S2;
+```
+
+由于 S 初值为 0，若进程 B 先执行则阻塞，只有等进程 A 执行完使 S 加 1，进程 B 才能执行
 
 ---
 
