@@ -201,7 +201,7 @@ begin
 
 #### 前趋关系
 
-假设进程 A、B 并发执行，A 中有语句 S1，B 中有语句 S2，若 S1 执行后才执行 S2，可设一个信号量 S，初值为 0，则
+假设进程 A、B 并发执行，A 中有语句 S1，B 中有语句 S2，若 S1 执行后才可执行 S2，可设一个信号量 S，初值为 0，则
 
 ```
 process A:
@@ -212,6 +212,25 @@ process B:
 ```
 
 由于 S 初值为 0，若进程 B 先执行则阻塞，只有等进程 A 执行完使 S 加 1，进程 B 才能执行
+
+例如，如下的前趋图
+
+为使各程序能正确执行，需分别为 S1→S2、S1→S3、S2→S4、S2→S5、S3→S6、S4→S6、S5→S6 设置信号量 a、b、c、d、e、f、g，则
+
+```
+Var a, b, c, d, e, f, g: semaphore := 0, 0, 0, 0, 0, 0, 0;
+
+begin
+    parbegin
+        begin S1;      signal(a); signal(b); end;
+        begin wait(a); S2;        signal(c); signal(d); end;
+        begin wait(b); S3;        signal(e); end;
+        begin wait(c); S4;        signal(f); end;
+        begin wait(d); S5;        signal(g); end;
+        begin wait(e); wait(f);   wait(g);   S6;        end;
+    parend
+end
+```
 
 ---
 
