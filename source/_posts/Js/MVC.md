@@ -8,11 +8,11 @@ title: MVC 模式
 - V（View）—— 界面设计人员进行图形界面设计
 - C（Controller）—— 负责转发请求，对请求进行处理
 
-![MVC](./image/MVC.png)
+![MVC](image/MVC.png)
 
 组件间的合作
 
-![MVC_cooperation](./image/MVC_cooperation.png)
+![MVC_cooperation](image/MVC_cooperation.png)
 
 ### Model（模型）
 
