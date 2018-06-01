@@ -136,3 +136,4 @@ egg-project
 ### 参考
 
 - [浅谈 MVC、MVP 和 MVVM 架构模式](https://draveness.me/mvx)
+- [维基百科 - Model–view–controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
