@@ -30,7 +30,7 @@ MVC的增强版本
 - MVVM 使应用程序更具可测试性
 - MVVM 更适合使用绑定机制
 
-###参考
+### 参考
 
 - [阮一峰 - MVC，MVP 和 MVVM 的图示](http://www.ruanyifeng.com/blog/2015/02/mvcmvp_mvvm.html)
 - [MVVM解析](https://blog.csdn.net/Chowbindeblog/article/details/55195289)
