@@ -32,73 +32,77 @@ HTTP 头部可以根据他们的上下文分为4种
 
   这些头部仅仅对单一的传输层连接有意义，并且不能被代理或缓存继续传输。这些头部有：`Connection` , `Keep-Alive` , `Proxy-Authenticate` , `Proxy-Authorization` , `TE` , `Trailer` , `Transfer-Encoding` 和 `Upgrade`。注意，只有 Hop-by-Hop 头部
 
-### 身份验证
+###身份验证
 
-#### WWW-Authenticate
+**WWW-Authenticate**
 
 定义获取资源访问权应该使用的身份验证方法
 
-#### Authorization
+**Authorization**
 
 包含与服务器进行验证身份的凭证
 
-#### Proxy-Authenticate
+**Proxy-Authenticate**
 
 定义在代理服务器后获取资源访问权的身份验证方法
 
-#### Proxy-Authorization
+**Proxy-Authorization**
 
 包含于代理服务器进行身份验证的凭证
 
 ### 缓存
 
-#### Age
+**Age**
 
 数据在代理缓存中的存在时间
 
-####Cache-Control
+**Cache-Control**
 
 指定请求或相应的缓存机制指令
 
-####Expires
+**Expires**
 
 相应的过期时间
 
-####Prama
+**Prama**
 
 特定实现的请求头，在请求相应链中的任何位置可能有各种各样的效果。向后兼容 HTTP/1.0 缓存，而那时 `Cache-Control` 还不存在
 
-####Warning
+**Warning**
 
 一般情况下，包含可能出现的问题的信息
 
-### Client hints
+### 客户端提示
 
-####Accept-CH
+**Accept-CH**
 
-####Accept-CH-Lifetime
+**Accept-CH-Lifetime**
 
-####Content-DPR
+**Content-DPR**
 
-####DPR
+**DPR**
 
-####Downlink
+**Downlink**
 
-#### Save-Data
+**Save-Data**
 
-#### Viewport-Width
+**Viewport-Width**
 
-#### Width
+**Width**
 
 ### Conditionals
 
-#### Last-Modified
+**Last-Modified**
 
-#### ETag
+验证器，资源的最后修改时间，用来比较同一资源的几个版本。没有 `ETag` 准确，但是在一些环境下更容易计算。使用 `If-Modified-Since` 和 `If-Unmodified-Since` 的请求使用这个字段来改变请求的行为
 
-#### If-Match
+**ETag**
 
-#### If-None-Match
+验证器，验证资源版本的独一无二字段。使用 `If-Match` 和 `If-None-Match` 的请求使用该字段来改变请求的行为
+
+**If-Match**
+
+**If-None-Match**
 
 
 
