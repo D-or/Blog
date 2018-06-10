@@ -32,7 +32,7 @@ HTTP 头部可以根据他们的上下文分为4种
 
   这些头部仅仅对单一的传输层连接有意义，并且不能被代理或缓存继续传输。这些头部有：`Connection` , `Keep-Alive` , `Proxy-Authenticate` , `Proxy-Authorization` , `TE` , `Trailer` , `Transfer-Encoding` 和 `Upgrade`。注意，只有 Hop-by-Hop 头部
 
-###身份验证
+### 身份验证
 
 **WWW-Authenticate**
 
@@ -103,61 +103,3 @@ HTTP 头部可以根据他们的上下文分为4种
 **If-Match**
 
 **If-None-Match**
-
-
-
-
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-#### Save-Data
-
-v
