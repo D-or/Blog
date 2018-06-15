@@ -107,6 +107,32 @@ HTTP 头部可以根据他们的上下文分为4种
 
 **`Cookie` , `Set-Cookie` , `Content-Disposition`**
 
+#### 按使用类别分类
+
+|   类别   |       字段名        |
+| :------: | :-----------------: |
+| 身份验证 |                     |
+|          |  WWW-Authenticate   |
+|          |    Authorization    |
+|          | Proxy-Authenticate  |
+|          | Proxy-Authorization |
+|   缓存   |                     |
+|          |         Age         |
+|          |    Cache-Control    |
+|          |       Expires       |
+|          |       Warning       |
+|          |                     |
+|          |                     |
+|          |                     |
+|          |                     |
+|          |                     |
+|          |                     |
+|          |                     |
+|          |                     |
+|          |                     |
+
+
+
 ---
 
 ### 身份验证
@@ -143,13 +169,128 @@ HTTP 头部可以根据他们的上下文分为4种
 Cache-Control: private, max-age=0, no-cache
 ```
 
-- 请求指令
+- 缓存请求指令
 
-  |      |      |
-  | :--: | :--: |
-  |      |      |
+  |       指令       |  参数  |             说明             |
+  | :--------------: | :----: | :--------------------------: |
+  |     no-cache     |   无   |    强制向源服务器再次验证    |
+  |     no-store     |   无   |  不缓存请求或响应的任何内容  |
+  |   max-age=[秒]   |  必需  |      响应的最大 Age 值       |
+  | max-stale(=[秒]) | 可省略 |       接收已过期的响应       |
+  |  min-fresh=[秒]  |  必需  | 期望在指定时间内的响应仍有效 |
+  |   no-transform   |   无   |     代理不可更改媒体类型     |
+  |  only-if-cached  |   无   |        从缓存获取资源        |
+  | cache-extension  |   -    |     新指令标记（token）      |
 
-  
+- 缓存响应指令
+
+  |      指令       |  参数  |                      说明                      |
+  | :-------------: | :----: | :--------------------------------------------: |
+  |     public      |   无   |            可向任意方提供响应的缓存            |
+  |     private     | 可省略 |              仅向特定用户返回响应              |
+  |    no-cache     | 可省略 |            缓存前必须先确认其有效性            |
+  |    no-store     |   无   |           不缓存请求或响应的任何内容           |
+  |  no-transform   |   无   |              代理不可更改媒体类型              |
+  | must-revalidate |   无   | 要求中间缓存服务器对缓存的响应有效性再进行确认 |
+  |  max-age=[秒]   |  必需  |               响应的最大 Age 值                |
+  |  s-maxage=[秒]  |  必需  |        公共缓存服务器响应的最大 Age 值         |
+  | cache-extension |   -    |              新指令标记（token）               |
+
+表示是否可缓存
+
+- public：表明其他用户也可利用缓存
+
+  ```
+  Cache-Control: public
+  ```
+
+- private：只对特定用户提供资源缓存的服务
+
+  ```
+  Cache-Control: private
+  ```
+
+- no-cache：防止从缓存中返回过期的资源
+
+  ```
+  Cache-Control: no-cache
+  ```
+
+  - 如果客户端的请求包含 `no-cache` 指令，客户端将不会接收缓存过的响应，中间的缓存服务器必须把请求转发给源服务器
+  - 如果服务器返回的响应包含 `no-cache` 指令，则缓存服务器不能对资源进行缓存，源服务器以后也将不再对缓存服务器请求中提出的资源有效性进行确认
+
+  ```
+  Cache-Control: no-cache=Location
+  ```
+
+  - 如果响应中 `no-cache` 有参数值，则客户端接收到该响应报文后，就不能使用缓存。只能在响应指令中指定该参数
+
+控制可执行缓存的对象的指令
+
+- no-store：请求（和对应的响应）或响应中包含机密信息，因此不能在本地缓存请求或响应的任一部分
+
+  ```
+  Cache-Control:no-store
+  ```
+
+指定缓存期限和认证的指令
+
+- s-maxage：功能与 `max-age` 相同，但 `s-maxage` 只适用于供多位用户使用的公共缓存服务器，否则指令无效，当使用 `s-maxage` 时，则忽略对 `Expires` 首部字段及 `max-age` 指令的处理
+
+  ```
+  Cache-Control: s-maxage=604800(单位：秒)
+  ```
+
+- max-age：资源保存为缓存的最长时间
+
+  ```
+  Cache-Control: max-age=604800(单位：秒)
+  ```
+
+  - 为 0 时，则缓存服务器通常需要将请求转发给源服务器
+
+  - 缓存资源的缓存时间比指定时间小，则客户端接收缓存资源
+  - 响应中包含 `max-age` 时，缓存服务器不再对资源有效性作确认
+  - HTTP/1.1 版本中，若与 `Expires` 首部字段一起使用，优先处理 `max-age` 指令，而 HTTP/1.0 版本则相反
+
+- min-fresh：要求缓存服务器返回至少还未过指定时间的缓存资源
+
+  ```
+  // 在这 60 秒内如果有超过有效期限的资源都无法作为响应返回
+  Cache-Control: min-fresh=60(单位：秒)
+  ```
+
+- max-stale：缓存资源即使过期也照常接收
+
+  ```
+  Cache-Control: max-stale=3600(单位：秒)
+  ```
+
+  - 如果未指定参数值，则无论过期多久，照常接收
+  - 如果指定参数值，即使过期，只要仍处于 `max-stale` 指定的时间内，照常接收
+
+- only-if-cached：表示客户端仅在缓存服务器本地缓存目标资源的情况下才会要求其返回
+
+  ```
+  Cache-Control: only-if-cached
+  ```
+
+  - 缓存服务器不重新加载响应，也不会再次确认资源有效性
+  - 若请求缓存服务器的本地缓存无响应，则返回 `504 Gateway Timeout`
+
+- must-revalidate
+
+- proxy-revalidate
+
+- no-transform
+
+Cache-Control 扩展
+
+- cache-extension token
+
+  ```
+  Cache-Control: private, community="UCI"
+  ```
 
 **Expires**
 
@@ -157,7 +298,7 @@ Cache-Control: private, max-age=0, no-cache
 
 **Prama**
 
-特定实现的请求头，在请求相应链中的任何位置可能有各种各样的效果。向后兼容 HTTP/1.0 缓存，而那时 `Cache-Control` 还不存在
+特定实现的请求头，在请求相应链中的任何位置可能有各种各样的效果。要求所有的中间服务器不返回缓存的资源，向后兼容 HTTP/1.0 缓存，而那时 `Cache-Control` 还不存在
 
 ```
 Pragma: no-cache
@@ -376,9 +517,7 @@ Accept-Encoding: gzip, deflate
 
 **Max-Forwards**
 
----
-
-###Cookies
+### Cookies
 
 **Cookie**
 
@@ -515,7 +654,198 @@ Accept-Encoding: gzip, deflate
 客户端 ----------------> 代理服务器A ------------------> 代理服务器B ----------------> 源服务器
 ```
 
+---
 
+### Redirects
+
+**Location**
+
+指示重定向页面的 URL
+
+---
+
+### Request Context
+
+**From**
+
+**Host**
+
+**Referer**
+
+**Referer-Policy**
+
+**User-Agent**
+
+---
+
+### Response Context
+
+**Allow**
+
+**Server**
+
+---
+
+### Range requests
+
+**Accept-Ranges**
+
+**Range**
+
+**If-Range**
+
+**Content-Range**
+
+---
+
+### Security
+
+**Content-Security-Policy**
+
+**Content-Security-Policy-Report-Only**
+
+**Expect-CT**
+
+**Public-Key-Pins**
+
+**Public-Key-Pin-Report-Only**
+
+**Strict-Transport-Security**
+
+**Upgrade-Insecure-Requests**
+
+**X-Content-Type-Options**
+
+**X-Download-Options**
+
+**X-Frame-Options**
+
+**X-Permitted-Cross-Domain-Policies**
+
+**X-Powered-By**
+
+**X-Xss-Protection**
+
+---
+
+### Server-sent events
+
+**Ping-From**
+
+**Ping-to**
+
+**Lase-Event-ID**
+
+---
+
+### Transfer-coding
+
+**Transfer-Encoding**
+
+规定了传输报文主体采用的编码方式，HTTP/1.1 传输编码方式仅对分块传输编码有效
+
+```
+HTTP/1.1 200 OK
+Date: Tue, 28 Feb 2018 00:00:00 GMT
+Cache-Control: public, max-age=604800
+Content-Type: text/javascript; charset=utf-8
+Expires: Tue, 28 Feb 2018 11:11:11 GMT
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Content-Encoding: gzip
+Transfer-Encoding: chunked
+Connection: keep-alive
+
+cf0     <---- 16进制(10进制为3312)
+
+...3312 字节分块数据...
+
+392     <---- 16进制(10进制为914)
+
+...914 字节分块数据...
+
+0
+```
+
+如上所示，使用分块传输编码，且被分为 3312 字节和 914 字节大小的分块数据
+
+**TE**
+
+**Trailer**
+
+事先说明报文主体后记录了哪些首部字段，可应用于 HTTP/1.1 版本分块传输编码
+
+```
+HTTP/1.1 200 OK
+Date: Tue, 28 Feb 2018 00:00:00 GMT
+Content-Type: text/html
+...
+Transfer-Encoing: chunked
+Trailer: Expires
+
+...(报文主体)...
+0
+Expires: Tue, 28 Feb 2018 11:11:11 GMT
+```
+
+---
+
+### Websockets
+
+**Sec-WebSocket-Key**
+
+**Sec-WebSocket-Extensions**
+
+**Sec-WebSocket-Accept**
+
+**Sec-WebSocket-Protocol**
+
+**Sec-WebSocket-Version**
+
+---
+
+### Other
+
+**Date**
+
+创建 HTTP 报文的日期与时间
+
+```
+// HTTP/1.1 版本的格式
+Date: Tue, 28 Feb 2018 00:00:00 GMT
+
+// 之前的版本的格式
+Date: Tue, 28-Feb-18 00:00:00 GMT
+
+// 另外一种，与 C 标准库的 asction() 输出格式一样
+Date: Tue Feb 28 00:00:00 2018
+```
+
+**Expect-CT**
+
+**Large-Allocation**
+
+**Link**
+
+**Retry-After**
+
+**Server-Timing**
+
+**SourceMap**
+
+**Upgrade**
+
+**Vary**
+
+**X-DNS-Prefetch-Control**
+
+**X-Firefox-Spdy**
+
+**X-Requested-With**
+
+**X-Robots-Tag**
+
+**X-UA-Compatible**
 
 ---
 
