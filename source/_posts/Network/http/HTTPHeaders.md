@@ -109,57 +109,146 @@ HTTP 头部可以根据他们的上下文分为4种
 
 #### 按使用类别分类
 
-|   类别   |       字段名        |
-| :------: | :-----------------: |
-| 身份验证 |                     |
-|          |  WWW-Authenticate   |
-|          |    Authorization    |
-|          | Proxy-Authenticate  |
-|          | Proxy-Authorization |
-|   缓存   |                     |
-|          |         Age         |
-|          |    Cache-Control    |
-|          |       Expires       |
-|          |       Warning       |
-|          |                     |
-|          |                     |
-|          |                     |
-|          |                     |
-|          |                     |
-|          |                     |
-|          |                     |
-|          |                     |
-|          |                     |
+|     类别     |              字段名              |
+| :----------: | :------------------------------: |
+|   身份验证   |                                  |
+|              |         WWW-Authenticate         |
+|              |          Authorization           |
+|              |        Proxy-Authenticate        |
+|              |       Proxy-Authorization        |
+|     缓存     |                                  |
+|              |               Age                |
+|              |          Cache-Control           |
+|              |             Expires              |
+|              |              Prama               |
+|              |             Warning              |
+|  客户端提示  |                                  |
+|              |            Accept-CH             |
+|              |        Accept-CH-Lifetime        |
+|              |           Content-DPR            |
+|              |               DPR                |
+|              |             Downlink             |
+|              |            Save-Data             |
+|              |          Viewport-Width          |
+|     条件     |                                  |
+|              |          Last-Modified           |
+|              |               ETag               |
+|              |             If-Match             |
+|              |          If-None-Match           |
+|              |        If-Modified-Since         |
+|              |       If-Unmodified-Since        |
+|   连接管理   |                                  |
+|              |            Connection            |
+|              |            Keep-Alive            |
+|   内容协商   |                                  |
+|              |              Accept              |
+|              |          Accept-Charset          |
+|              |         Accept-Encoding          |
+|              |         Accept-Language          |
+|     控制     |                                  |
+|              |              Expect              |
+|              |           Max-Forwards           |
+|   Cookies    |                                  |
+|              |              Cookie              |
+|              |            Set-Cookie            |
+|              |             Cookie2              |
+|              |           Set-Cookie2            |
+|     CORS     |                                  |
+|              |   Access-Control-Allow-Origin    |
+|              | Access-Control-Allow-Credentials |
+|              |   Access-Control-Allow-Headers   |
+|              |   Access-Control-Allow-Methods   |
+|              |  Access-Control-Expose-Headers   |
+|              |      Access-Control-Max-Age      |
+|              |  Access-Control-Request-Headers  |
+|              |  Access-Control-Request-Method   |
+|              |              Origin              |
+|              |       Timing-Allow-Origin        |
+| Do Not Track |                                  |
+|              |               DNT                |
+|              |                TK                |
+|     下载     |                                  |
+|              |       Content-Disposition        |
+| 消息主体信息 |                                  |
+|              |          Content-Length          |
+|              |           Content-Type           |
+|              |         Content-Encoding         |
+|              |         Content-Laguage          |
+|              |         Content-Location         |
+|     代理     |                                  |
+|              |            Forwarded             |
+|              |         X-Forwarded-For          |
+|              |         X-Forwarded-Host         |
+|              |        X-Forwarded-Proto         |
+|              |               Via                |
+|    重定向    |                                  |
+|              |             Location             |
+|  请求上下文  |                                  |
+|              |               From               |
+|              |               Host               |
+|              |             Referer              |
+|              |          Referer-Policy          |
+|              |            User-Agent            |
+|  响应上下文  |                                  |
+|              |              Allow               |
+|              |              Server              |
+|   请求范围   |                                  |
+|              |          Accept-Ranges           |
+|              |              Range               |
+|              |             If-Range             |
+|              |          Content-Range           |
+
+|      类别       |               字段名                |
+| :-------------: | :---------------------------------: |
+|      安全       |                                     |
+|                 |       Content-Security-Policy       |
+|                 | Content-Security-Policy-Report-Only |
+|                 |              Expect-CT              |
+|                 |           Public-Key-Pins           |
+|                 |     Public-Key-Pins-Report-Only     |
+|                 |      Strict-Transport-Security      |
+|                 |      Upgrade-Insecure-Requests      |
+|                 |       X-Content-Type-Options        |
+|                 |         X-Download-Options          |
+|                 |           X-Frame-Options           |
+|                 |  X-Permitted-Cross-Domain-Policies  |
+|                 |            X-Powered-By             |
+|                 |          X-XSS-Protection           |
+| 服务端发送事件  |                                     |
+|                 |              Ping-From              |
+|                 |               Ping-To               |
+|                 |            Last-Event-ID            |
+| Transfer coding |                                     |
+|                 |          Transfer-Encoding          |
+|                 |                 TE                  |
+|                 |               Trailer               |
+|    WebSockt     |                                     |
+|                 |          Sec-WebSocket-Key          |
+|                 |      Sec-WebSocket-Extensions       |
+|                 |        Sec-WebSocket-Accept         |
+|                 |       Sec-WebSocket-Protocol        |
+|                 |        Sec-WebSocket-Version        |
+|      其他       |                                     |
+|                 |                Date                 |
+|                 |              Expect-CT              |
+|                 |          Large-Allocation           |
+|                 |                Link                 |
+|                 |             Retry-After             |
+|                 |            Server-Timing            |
+|                 |              SourceMap              |
+|                 |               Upgrade               |
+|                 |                Vary                 |
+|                 |       X-DNS-Prefetch-Control        |
+|                 |           X-Firefox-Spdy            |
+|                 |          X-Requested-With           |
+|                 |            X-Robots-Tag             |
+|                 |           X-UA-Compatible           |
 
 
 
 ---
 
-### 身份验证
-
-**WWW-Authenticate**
-
-定义获取资源访问权应该使用的身份验证方法
-
-**Authorization**
-
-包含与服务器进行验证身份的凭证
-
-**Proxy-Authenticate**
-
-定义在代理服务器后获取资源访问权的身份验证方法
-
-**Proxy-Authorization**
-
-包含于代理服务器进行身份验证的凭证
-
----
-
-### 缓存
-
-**Age**
-
-数据在代理缓存中的存在时间
+### 通用首部
 
 **Cache-Control**
 
@@ -248,7 +337,6 @@ Cache-Control: private, max-age=0, no-cache
   ```
 
   - 为 0 时，则缓存服务器通常需要将请求转发给源服务器
-
   - 缓存资源的缓存时间比指定时间小，则客户端接收缓存资源
   - 响应中包含 `max-age` 时，缓存服务器不再对资源有效性作确认
   - HTTP/1.1 版本中，若与 `Expires` 首部字段一起使用，优先处理 `max-age` 指令，而 HTTP/1.0 版本则相反
@@ -292,101 +380,6 @@ Cache-Control 扩展
   Cache-Control: private, community="UCI"
   ```
 
-**Expires**
-
-相应的过期时间
-
-**Prama**
-
-特定实现的请求头，在请求相应链中的任何位置可能有各种各样的效果。要求所有的中间服务器不返回缓存的资源，向后兼容 HTTP/1.0 缓存，而那时 `Cache-Control` 还不存在
-
-```
-Pragma: no-cache
-```
-
-如果所有的中间服务器都以 HTTP/1.1 为基准，则直接采用 `Cache-Control: no-cache`，否则一般都会同时使用下面两个首部字段
-
-```
-Cache-Control: no-cache
-Pragma: no-cache
-```
-
-**Warning**
-
-一般情况下，包含可能出现的与缓存相关的问题的信息
-
-```
-// 格式
-Warning: [警告码][警告的主机:端口号]"[警告的内容]"([日期时间<可选>])
-
-// 举例
-Warning: 113 example.com:8080 "Heuristic expiration" Tue, 28 Feb => 2018 00:00:00 GMT
-```
-
-HTTP/1.1 定义了7种警告
-
-| 警告码 |                     警告内容                     |                             说明                             |
-| :----: | :----------------------------------------------: | :----------------------------------------------------------: |
-|  110   |         Response is stale（响应已过期）          |                     代理返回已过期的资源                     |
-|  111   |        Revalidation failed（再验证失败）         |       代理再验证资源有效性失败（服务器无法到达等原因）       |
-|  112   |     Disconnection operation（断开连接操作）      |                  代理与互联网连接被故意切断                  |
-|  113   |        Heuristic expiration（试探性过期）        | 响应的使用期超过24小时（有效缓存的设定时间大于24小时的情况下） |
-|  199   |        Miscellaneous warning（杂项警告）         |                        任意的警告内容                        |
-|  214   |       Transformation applied（使用了转换）       |          代理对内容编码或媒体类型等执行了某些处理时          |
-|  299   | Miscellaneous persistent warning（持久杂项警告） |                        任意的警告内容                        |
-
----
-
-### 客户端提示
-
-**Accept-CH**
-
-**Accept-CH-Lifetime**
-
-**Content-DPR**
-
-**DPR**
-
-**Downlink**
-
-**Save-Data**
-
-**Viewport-Width**
-
-**Width**
-
----
-
-### 条件
-
-**Last-Modified**
-
-验证器，资源的最后修改时间，用来比较同一资源的几个版本。没有 `ETag` 准确，但是在一些环境下更容易计算。使用 `If-Modified-Since` 和 `If-Unmodified-Since` 的请求使用这个字段来改变请求的行为
-
-**ETag**
-
-验证器，验证资源版本的独一无二字段。使用 `If-Match` 和 `If-None-Match` 的请求使用该字段来改变请求的行为
-
-**If-Match**
-
-使请求有条件，并且只在存储资源与给定的 `ETag` 之一匹配时才应用该方法
-
-**If-None-Match**
-
-使请求有条件，并仅在存储资源不与任何给定的 `ETag` 匹配时才应用该方法。这用于请求更新缓存（用于安全请求），或者在资源已经存在时避免防止上传新资源
-
-**If-Modified-SInce**
-
-使请求有条件，并期望只有在给定时间后才被修改的实体才会被传输。这只用于在缓存过期时传输数据
-
-**If-Unmodified-Since**
-
-使请求有条件，并期望实体仅在给定日期后未被修改的情况下才被传送。这用于确保特定范围的新片段与以前的片段的一致性，或者在修改现有文档时实现乐观的并发控制系统
-
----
-
-### 连接管理
-
 **Connection**
 
 控制在当前事务完成后该网络连接是否保持打开状态
@@ -422,15 +415,124 @@ HTTP/1.1 定义了7种警告
     Connection: close
     ```
 
-HTTP/1.1 之前的版本的默认连接都是非持久连接
+- HTTP/1.1 之前的版本的默认连接都是非持久连接
 
-**Keep-Alive**
+**Date**
 
-控制持久连接应该保持打开状态多长时间
+创建 HTTP 报文的日期与时间
+
+```
+// HTTP/1.1 版本的格式
+Date: Tue, 28 Feb 2018 00:00:00 GMT
+
+// 之前的版本的格式
+Date: Tue, 28-Feb-18 00:00:00 GMT
+
+// 另外一种，与 C 标准库的 asction() 输出格式一样
+Date: Tue Feb 28 00:00:00 2018
+```
+
+**Prama**
+
+特定实现的请求头，在请求相应链中的任何位置可能有各种各样的效果。要求所有的中间服务器不返回缓存的资源，向后兼容 HTTP/1.0 缓存，而那时 `Cache-Control` 还不存在
+
+```
+Pragma: no-cache
+```
+
+如果所有的中间服务器都以 HTTP/1.1 为基准，则直接采用 `Cache-Control: no-cache`，否则一般都会同时使用下面两个首部字段
+
+```
+Cache-Control: no-cache
+Pragma: no-cache
+```
+
+**Trailer**
+
+事先说明报文主体后记录了哪些首部字段，可应用于 HTTP/1.1 版本分块传输编码
+
+```
+HTTP/1.1 200 OK
+Date: Tue, 28 Feb 2018 00:00:00 GMT
+Content-Type: text/html
+...
+Transfer-Encoing: chunked
+Trailer: Expires
+
+...(报文主体)...
+0
+Expires: Tue, 28 Feb 2018 11:11:11 GMT
+```
+
+**Transfer-Encoding**
+
+规定了传输报文主体采用的编码方式，HTTP/1.1 传输编码方式仅对分块传输编码有效
+
+```
+HTTP/1.1 200 OK
+Date: Tue, 28 Feb 2018 00:00:00 GMT
+Cache-Control: public, max-age=604800
+Content-Type: text/javascript; charset=utf-8
+Expires: Tue, 28 Feb 2018 11:11:11 GMT
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Content-Encoding: gzip
+Transfer-Encoding: chunked
+Connection: keep-alive
+
+cf0     <---- 16进制(10进制为3312)
+
+...3312 字节分块数据...
+
+392     <---- 16进制(10进制为914)
+
+...914 字节分块数据...
+
+0
+```
+
+如上所示，使用分块传输编码，且被分为 3312 字节和 914 字节大小的分块数据
+
+**Upgrade**
+
+**Via**
+
+由代理（正向和反向代理）添加，追踪客户端与服务器之间的请求和响应报文的传输路径。与 traceroute 及电子邮件的 Received 首部的工作机制类似
+
+```
+                                                                   GET / HTTP/1.1
+                                    GET / HTTP/1.1                 Via: 1.0 example.com，
+       GET / HTTP/1.1               Via: 1.0 example.com                1.1 test.com
+客户端 ----------------> 代理服务器A ------------------> 代理服务器B ----------------> 源服务器
+```
+
+**Warning**
+
+一般情况下，包含可能出现的与缓存相关的问题的信息
+
+```
+// 格式
+Warning: [警告码][警告的主机:端口号]"[警告的内容]"([日期时间<可选>])
+
+// 举例
+Warning: 113 example.com:8080 "Heuristic expiration" Tue, 28 Feb => 2018 00:00:00 GMT
+```
+
+HTTP/1.1 定义了7种警告
+
+| 警告码 |                     警告内容                     |                             说明                             |
+| :----: | :----------------------------------------------: | :----------------------------------------------------------: |
+|  110   |         Response is stale（响应已过期）          |                     代理返回已过期的资源                     |
+|  111   |        Revalidation failed（再验证失败）         |       代理再验证资源有效性失败（服务器无法到达等原因）       |
+|  112   |     Disconnection operation（断开连接操作）      |                  代理与互联网连接被故意切断                  |
+|  113   |        Heuristic expiration（试探性过期）        | 响应的使用期超过24小时（有效缓存的设定时间大于24小时的情况下） |
+|  199   |        Miscellaneous warning（杂项警告）         |                        任意的警告内容                        |
+|  214   |       Transformation applied（使用了转换）       |          代理对内容编码或媒体类型等执行了某些处理时          |
+|  299   | Miscellaneous persistent warning（持久杂项警告） |                        任意的警告内容                        |
 
 ---
 
-### 内容协商
+### 请求首部
 
 **Accept**
 
@@ -507,15 +609,171 @@ Accept-Encoding: gzip, deflate
 
 通知服务端期望发回的语言。这是一个提示，并且在用户的完全控制之下不一定需要：服务端应始终注意不要覆盖显示的用户选择（比如在一个下拉列表中选择一个语言）
 
----
+**Authorization**
 
-### 控制
+包含与服务器进行验证身份的凭证
 
 **Expect**
 
 指示服务端需要满足的期望，以便正确地处理请求
 
+**From**
+
+**Host**
+
+**If-Match**
+
+使请求有条件，并且只在存储资源与给定的 `ETag` 之一匹配时才应用该方法
+
+**If-Modified-SInce**
+
+使请求有条件，并期望只有在给定时间后才被修改的实体才会被传输。这只用于在缓存过期时传输数据
+
+**If-None-Match**
+
+使请求有条件，并仅在存储资源不与任何给定的 `ETag` 匹配时才应用该方法。这用于请求更新缓存（用于安全请求），或者在资源已经存在时避免防止上传新资源
+
+**If-Range**
+
+**If-Unmodified-Since**
+
+使请求有条件，并期望实体仅在给定日期后未被修改的情况下才被传送。这用于确保特定范围的新片段与以前的片段的一致性，或者在修改现有文档时实现乐观的并发控制系统
+
 **Max-Forwards**
+
+**Proxy-Authorization**
+
+包含于代理服务器进行身份验证的凭证
+
+**Range**
+
+**Referer**
+
+**TE**
+
+**User-Agent**
+
+---
+
+### 响应首部
+
+**Accept-Ranges**
+
+**Age**
+
+数据在代理缓存中的存在时间
+
+**ETag**
+
+验证器，验证资源版本的独一无二字段。使用 `If-Match` 和 `If-None-Match` 的请求使用该字段来改变请求的行为
+
+**Location**
+
+指示重定向页面的 URL
+
+**Proxy-Authenticate**
+
+定义在代理服务器后获取资源访问权的身份验证方法
+
+**Retry-After**
+
+**Server**
+
+**Vary**
+
+**WWW-Authenticate**
+
+定义获取资源访问权应该使用的身份验证方法
+
+---
+
+### 实体首部
+
+**Allow**
+
+**Content-Encoding**
+
+用于指定压缩算法
+
+**Content-Language**
+
+指示主体使用的语言
+
+**Content-Length**
+
+指示发送给接受者的实体主体大小
+
+**Content-Location**
+
+指示返回数据的备用地址
+
+**Content-Type**
+
+指示资源类型
+
+**Content-Range**
+
+**Expires**
+
+相应的过期时间
+
+**Last-Modified**
+
+验证器，资源的最后修改时间，用来比较同一资源的几个版本。没有 `ETag` 准确，但是在一些环境下更容易计算。使用 `If-Modified-Since` 和 `If-Unmodified-Since` 的请求使用这个字段来改变请求的行为
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 客户端提示
+
+**Accept-CH**
+
+**Accept-CH-Lifetime**
+
+**Content-DPR**
+
+**DPR**
+
+**Downlink**
+
+**Save-Data**
+
+**Viewport-Width**
+
+**Width**
+
+---
+
+### 连接管理
+
+
+
+**Keep-Alive**
+
+控制持久连接应该保持打开状态多长时间
+
+---
+
+### 控制
+
+
 
 ### Cookies
 
@@ -603,25 +861,7 @@ Accept-Encoding: gzip, deflate
 
 ### 消息主体信息
 
-**Content-Length**
 
-指示发送给接受者的实体主体大小
-
-**Content-Type**
-
-指示资源类型
-
-**Content-Encoding**
-
-用于指定压缩算法
-
-**Content-Language**
-
-指示主体使用的语言
-
-**Content-Location**
-
-指示返回数据的备用地址
 
 ---
 
@@ -643,58 +883,11 @@ Accept-Encoding: gzip, deflate
 
 标识客户端连接到代理或负载均衡器的协议（HTTP 或 HTTPS）
 
-**Via**
-
-由代理（正向和反向代理）添加，追踪客户端与服务器之间的请求和响应报文的传输路径。与 traceroute 及电子邮件的 Received 首部的工作机制类似
-
-```
-                                                                   GET / HTTP/1.1
-                                    GET / HTTP/1.1                 Via: 1.0 example.com，
-       GET / HTTP/1.1               Via: 1.0 example.com                1.1 test.com
-客户端 ----------------> 代理服务器A ------------------> 代理服务器B ----------------> 源服务器
-```
-
----
-
-### Redirects
-
-**Location**
-
-指示重定向页面的 URL
-
 ---
 
 ### Request Context
 
-**From**
-
-**Host**
-
-**Referer**
-
 **Referer-Policy**
-
-**User-Agent**
-
----
-
-### Response Context
-
-**Allow**
-
-**Server**
-
----
-
-### Range requests
-
-**Accept-Ranges**
-
-**Range**
-
-**If-Range**
-
-**Content-Range**
 
 ---
 
@@ -740,53 +933,9 @@ Accept-Encoding: gzip, deflate
 
 ### Transfer-coding
 
-**Transfer-Encoding**
 
-规定了传输报文主体采用的编码方式，HTTP/1.1 传输编码方式仅对分块传输编码有效
 
-```
-HTTP/1.1 200 OK
-Date: Tue, 28 Feb 2018 00:00:00 GMT
-Cache-Control: public, max-age=604800
-Content-Type: text/javascript; charset=utf-8
-Expires: Tue, 28 Feb 2018 11:11:11 GMT
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-Content-Encoding: gzip
-Transfer-Encoding: chunked
-Connection: keep-alive
 
-cf0     <---- 16进制(10进制为3312)
-
-...3312 字节分块数据...
-
-392     <---- 16进制(10进制为914)
-
-...914 字节分块数据...
-
-0
-```
-
-如上所示，使用分块传输编码，且被分为 3312 字节和 914 字节大小的分块数据
-
-**TE**
-
-**Trailer**
-
-事先说明报文主体后记录了哪些首部字段，可应用于 HTTP/1.1 版本分块传输编码
-
-```
-HTTP/1.1 200 OK
-Date: Tue, 28 Feb 2018 00:00:00 GMT
-Content-Type: text/html
-...
-Transfer-Encoing: chunked
-Trailer: Expires
-
-...(报文主体)...
-0
-Expires: Tue, 28 Feb 2018 11:11:11 GMT
-```
 
 ---
 
@@ -806,36 +955,15 @@ Expires: Tue, 28 Feb 2018 11:11:11 GMT
 
 ### Other
 
-**Date**
-
-创建 HTTP 报文的日期与时间
-
-```
-// HTTP/1.1 版本的格式
-Date: Tue, 28 Feb 2018 00:00:00 GMT
-
-// 之前的版本的格式
-Date: Tue, 28-Feb-18 00:00:00 GMT
-
-// 另外一种，与 C 标准库的 asction() 输出格式一样
-Date: Tue Feb 28 00:00:00 2018
-```
-
 **Expect-CT**
 
 **Large-Allocation**
 
 **Link**
 
-**Retry-After**
-
 **Server-Timing**
 
 **SourceMap**
-
-**Upgrade**
-
-**Vary**
 
 **X-DNS-Prefetch-Control**
 
