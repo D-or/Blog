@@ -607,33 +607,79 @@ Accept-Encoding: gzip, deflate
 
 **Accept-Language**
 
-通知服务端期望发回的语言。这是一个提示，并且在用户的完全控制之下不一定需要：服务端应始终注意不要覆盖显示的用户选择（比如在一个下拉列表中选择一个语言）
+告知服务器用户代理能够处理的自然语言集（中文或英文等）及优先级，同样使用 **`q`** 表示优先级，也可使用 **`*`**
+
+```
+Accept-Language: zh-cn,zh;q=0.7, en-us,en;q=0.3
+```
 
 **Authorization**
 
-包含与服务器进行验证身份的凭证
+告知服务器用户代理的认证信息（证书值）。通常情况下，用户代理收到 401 状态码的响应后，把 Authorization 加入请求中
+
+![Authorization](./image/Authorization.png)
 
 **Expect**
 
-指示服务端需要满足的期望，以便正确地处理请求
+告知服务器期望出现的某种特定行为，当服务器无法理解客户端的期望做出回应而发生错误时，会返回状态码 417 Expectation Failed
+
+等待状态码 100 响应的客户端发生请求时，需指定：
+
+```
+Expect: 100-continue
+```
 
 **From**
 
+告知服务器使用用户代理的用户的电子邮件地址，通常是为了显示联系方式。使用代理时，尽可能使用该字段。（有时因代理不同，将电子邮件地址记录在 `User-Agent` 首部字段内）
+
+```
+From: example@gmail.com
+```
+
 **Host**
+
+告知服务器请求的资源所处的互联网主机名和端口号。HTTP/1.1 中，Host 是唯一一个必须被包含在请求内的首部字段
+
+同一个 IP 地址可能部署运行多个域名，所以 Host 就是为了明确指出请求的主机名。若服务器未设定主机名，直接发送空值即可，即 `Host:`
+
+```
+Host: www.example.com
+```
 
 **If-Match**
 
-使请求有条件，并且只在存储资源与给定的 `ETag` 之一匹配时才应用该方法
+附带条件之一，告知服务器匹配资源所用的实体标记（ETag）值。如果使用 **`*`** 作为值，服务器将忽略 ETag 的值，只要资源存在便处理请求
 
-**If-Modified-SInce**
+```
+If-Match: "123456"
+```
 
-使请求有条件，并期望只有在给定时间后才被修改的实体才会被传输。这只用于在缓存过期时传输数据
+服务器会比对 `If-Match` 的字段值和资源的 `ETag` 值，两者一致才处理请求，否则返回状态码 412 Precondition Failed 的响应
+
+![If-Match](./image/If-Match.png)
+
+**If-Modified-Since**
+
+用于确认代理或客户端拥有的本地资源的有效性。`Last-Modified` 可以确定资源的更新时间
+
+如果请求的资源在 `If-Modified-Since` 之后都没有更新过，就返回 304 Not Modified 的响应
+
+![If-Modified-Since](./image/If-Modified-Since.png)
 
 **If-None-Match**
 
-使请求有条件，并仅在存储资源不与任何给定的 `ETag` 匹配时才应用该方法。这用于请求更新缓存（用于安全请求），或者在资源已经存在时避免防止上传新资源
+附加条件之一，与 `If-Match` 作用相反，当该字段指定值的实体标记 （ETag）值与请求资源的 `ETag` 不一致时，告知服务器处理该请求。这用于请求更新缓存（用于安全请求），或者在资源已经存在时避免防止上传新资源
+
+在 `GET` 或 `HEAD` 方法中使用该字段可获取最新的资源
+
+![If-None-Match](./image/If-None-Match.png)
 
 **If-Range**
+
+该字段值若与 `ETag` 值或更新的日期时间相匹配，便作为范围请求处理，若不一致，则返回全体资源
+
+![If-Range](./image/If-Range.png)
 
 **If-Unmodified-Since**
 
@@ -665,7 +711,7 @@ Accept-Encoding: gzip, deflate
 
 **ETag**
 
-验证器，验证资源版本的独一无二字段。使用 `If-Match` 和 `If-None-Match` 的请求使用该字段来改变请求的行为
+实体标记，与特定资源关联的确定值，资源更新后 `ETag` 也随之更新。使用 `If-Match` 和 `If-None-Match` 的请求使用该字段来改变请求的行为
 
 **Location**
 
@@ -723,57 +769,13 @@ Accept-Encoding: gzip, deflate
 
 ---
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### 客户端提示
-
-**Accept-CH**
-
-**Accept-CH-Lifetime**
-
-**Content-DPR**
-
-**DPR**
-
-**Downlink**
-
-**Save-Data**
-
-**Viewport-Width**
-
-**Width**
-
----
-
 ### 连接管理
-
-
 
 **Keep-Alive**
 
 控制持久连接应该保持打开状态多长时间
 
 ---
-
-### 控制
-
-
 
 ### Cookies
 
@@ -859,12 +861,6 @@ Accept-Encoding: gzip, deflate
 
 ---
 
-### 消息主体信息
-
-
-
----
-
 ### Proxies
 
 **Forwarded**
@@ -882,98 +878,6 @@ Accept-Encoding: gzip, deflate
 **X-Forwarded-Proto**
 
 标识客户端连接到代理或负载均衡器的协议（HTTP 或 HTTPS）
-
----
-
-### Request Context
-
-**Referer-Policy**
-
----
-
-### Security
-
-**Content-Security-Policy**
-
-**Content-Security-Policy-Report-Only**
-
-**Expect-CT**
-
-**Public-Key-Pins**
-
-**Public-Key-Pin-Report-Only**
-
-**Strict-Transport-Security**
-
-**Upgrade-Insecure-Requests**
-
-**X-Content-Type-Options**
-
-**X-Download-Options**
-
-**X-Frame-Options**
-
-**X-Permitted-Cross-Domain-Policies**
-
-**X-Powered-By**
-
-**X-Xss-Protection**
-
----
-
-### Server-sent events
-
-**Ping-From**
-
-**Ping-to**
-
-**Lase-Event-ID**
-
----
-
-### Transfer-coding
-
-
-
-
-
----
-
-### Websockets
-
-**Sec-WebSocket-Key**
-
-**Sec-WebSocket-Extensions**
-
-**Sec-WebSocket-Accept**
-
-**Sec-WebSocket-Protocol**
-
-**Sec-WebSocket-Version**
-
----
-
-### Other
-
-**Expect-CT**
-
-**Large-Allocation**
-
-**Link**
-
-**Server-Timing**
-
-**SourceMap**
-
-**X-DNS-Prefetch-Control**
-
-**X-Firefox-Spdy**
-
-**X-Requested-With**
-
-**X-Robots-Tag**
-
-**X-UA-Compatible**
 
 ---
 
