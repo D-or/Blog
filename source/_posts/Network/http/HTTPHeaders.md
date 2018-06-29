@@ -683,21 +683,81 @@ If-Match: "123456"
 
 **If-Unmodified-Since**
 
-使请求有条件，并期望实体仅在给定日期后未被修改的情况下才被传送。这用于确保特定范围的新片段与以前的片段的一致性，或者在修改现有文档时实现乐观的并发控制系统
+告知服务器，指定的请求资源只有在字段值内指定的时间之后未发生改变的情况下，才处理请求，若发生了更新，则返回状态码 412 Precondition Failed 的响应。与 `If-Modified-Since` 作用相反
+
+```
+If-Unmidified-Since: Tue, 28 Feb 2018 00:00:00 GMT
+```
 
 **Max-Forwards**
 
+```
+Max-Forwards: 2       Max-Forwards: 1       Max-Forwards: 0
+    客户端      --->     代理服务器 A   --->    代理服务器 B    --->    源服务器
+                                              (直接返回响应)
+```
+
+通过 TRACE 方法或 OPTIONS 方法，该字段指定可经过的服务器的最大数目。每次转发数值都会减一。当服务器收到该值为 0 的请求时，则不再进行转发，直接返回响应
+
+```
+Max-Forwards: 10
+```
+
 **Proxy-Authorization**
 
-包含于代理服务器进行身份验证的凭证
+接收到从代理服务器发来的认证质询时，客户端发送包含该字段的请求，以告知服务端认证所需的信息
+
+```
+Proxy-Authorization: Basic dGowrqoweqnmzckljq
+```
+
+该字段用于客户端与代理之间的认证，而客户端与服务器之间的认证，则使用 `Authorization`
 
 **Range**
 
+告知服务端请求的资源的指定范围
+
+```
+Range: bytes=5001-10000
+```
+
+服务端处理完请求后返回状态码为 206 Partial Content 的响应，若无法处理，则返回包含 200 OK 状态码以及全部资源的响应
+
 **Referer**
+
+告知服务端请求的原始资源的 URI
+
+```
+Referer: http://www.example.com/index.html
+```
+
+处于安全考虑，也可不发送该字段，因为可能带有 ID 和密码等保密信息
+
+另外，正确拼写应该是 Referrer，但是却一直沿用错误的写法
 
 **TE**
 
+告知服务端客户端能处理响应的传输编码方式及相对优先级，跟 `Accept-Encoding` 功能类似，但是用于传输编码
+
+```
+TE: gzip, deflate;q=0.5
+```
+
+除了指定传输编码外，还可以指定伴随 `trailer` 字段的分块传输编码，应用后者时，赋值为 trailers 即可
+
+```
+TE: trailers
+```
+
 **User-Agent**
+
+告知服务端创建请求的浏览器和用户代理名称等信息
+
+如果是网络爬虫发起的请求，可能会在字段内添加爬虫作者的电子邮件，如果经过代理，中间可能添加代理服务器的名称
+
+```
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:13.0) Gecko/=>20100101 Firefox/13.0.1
+```
 
 ---
 
